@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER-OS v5.0 // Matrix Kiberxavfsizlik & Muhandislik Portfeli</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #00ff41;
+            --primary-dim: rgba(0, 255, 65, 0.14);
+            --primary-glow: rgba(0, 255, 65, 0.55);
+            --primary-border: rgba(0, 255, 65, 0.35);
+            --bg-dark: #020503;
+            --panel-bg: rgba(3, 12, 6, 0.85);
+        }
+
+        body.theme-cyan {
+            --primary: #00f3ff;
+            --primary-dim: rgba(0, 243, 255, 0.14);
+            --primary-glow: rgba(0, 243, 255, 0.55);
+            --primary-border: rgba(0, 243, 255, 0.35);
+            --bg-dark: #01060a;
+            --panel-bg: rgba(2, 12, 20, 0.86);
+        }
+
+        body.theme-red {
+            --primary: #ff003c;
+            --primary-dim: rgba(255, 0, 60, 0.14);
+            --primary-glow: rgba(255, 0, 60, 0.55);
+            --primary-border: rgba(255, 0, 60, 0.35);
+            --bg-dark: #090103;
+            --panel-bg: rgba(18, 2, 6, 0.86);
+        }
+
+        body.theme-amber {
+            --primary: #ffb000;
+            --primary-dim: rgba(255, 176, 0, 0.14);
+            --primary-glow: rgba(255, 176, 0, 0.55);
+            --primary-border: rgba(255, 176, 0, 0.35);
+            --bg-dark: #080500;
+            --panel-bg: rgba(16, 10, 0, 0.86);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: var(--bg-dark);
+            color: var(--primary);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+            transition: color 0.25s ease, background-color 0.25s ease;
+        }
+
+        .font-tech {
+            font-family: 'Share Tech Mono', monospace;
+        }
+
+        .c-text { color: var(--primary); }
+        .c-bg-dim { background-color: var(--primary-dim); }
+        .c-bg-solid { background-color: var(--primary); }
+        .c-border { border-color: var(--primary-border); }
+        .c-border-bright { border-color: var(--primary); }
+
+        .neon-text {
+            text-shadow: 0 0 6px var(--primary-glow), 0 0 14px var(--primary-dim);
+        }
+
+        .hud-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--primary-border);
+            box-shadow: 0 4px 28px rgba(0, 0, 0, 0.72), inset 0 0 14px var(--primary-dim);
+            position: relative;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .hud-panel:hover {
+            border-color: var(--primary);
+        }
+
+        .hud-corners::before, .hud-corners::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-color: var(--primary);
+            border-style: solid;
+            pointer-events: none;
+        }
+
+        .hud-corners::before {
+            top: -1px;
+            left: -1px;
+            border-width: 2px 0 0 2px;
+        }
+
+        .hud-corners::after {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 2px 2px 0;
+        }
+
+        .scanlines {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.26) 50%
+            );
+            background-size: 100% 3px;
+            z-index: 45;
+            pointer-events: none;
+        }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #020503; }
+        ::-webkit-scrollbar-thumb { background: var(--primary-border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        .glitch-title:hover {
+            animation: glitch-skew 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-3deg); text-shadow: -2px 0 #ff003c, 2px 0 #00f3ff; }
+            40% { transform: skew(3deg); text-shadow: 2px 0 #ff003c, -2px 0 #00f3ff; }
+            60% { transform: skew(-1deg); }
+            80% { transform: skew(2deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        .typing-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            animation: typingBounce 1.1s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.18s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.36s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.45); opacity: 0.45; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#00ff41] selection:text-black">
+
+    <!-- 3D-LIKE INTERACTIVE LATIN MATRIX RAIN CANVAS -->
+    <canvas id="matrixCanvas" class="fixed inset-0 w-full h-full -z-10"></canvas>
+
+    <!-- CRT SCANLINE OVERLAY -->
+    <div class="scanlines"></div>
+
+    <!-- INTRO BOOT OVERLAY (NEVER STUCK, ESC & CLICK SKIP SUPPORTED) -->
+    <div id="bootOverlay" class="fixed inset-0 z-50 bg-[#010402]/95 flex flex-col items-center justify-center p-5 transition-opacity duration-500">
+        <div class="max-w-xl w-full hud-panel hud-corners rounded-2xl p-5 sm:p-7">
+            <div class="flex items-center justify-between border-b c-border pb-3 mb-4 gap-2">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    <span class="font-tech text-sm sm:text-base tracking-widest font-bold">CYBER-OS KERNEL v5.0</span>
+                </div>
+                <button id="skipBootBtn" type="button" onclick="skipBoot()" class="text-xs px-3 py-1.5 rounded-lg border c-border-bright c-bg-dim hover:c-bg-solid hover:text-black transition cursor-pointer font-bold">
+                    O'TKAZIB YUBORISH [ESC]
+                </button>
+            </div>
+            <div id="bootLogs" class="font-mono text-xs sm:text-sm space-y-1.5 min-h-[145px]"></div>
+            <div class="mt-4">
+                <div class="flex justify-between text-[11px] font-tech mb-1">
+                    <span>TIZIM YUKLANMOQDA...</span>
+                    <span id="bootPercent">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-black rounded-full overflow-hidden border c-border">
+                    <div id="bootProgressBar" class="h-full c-bg-solid transition-all duration-150" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP TELEMETRY & CONTROLS HEADER -->
+    <header class="w-full hud-panel border-t-0 border-x-0 sticky top-0 z-30 px-3 sm:px-6 py-2.5">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full c-bg-solid opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 c-bg-solid"></span>
+                </span>
+                <div>
+                    <span class="font-tech font-bold text-sm sm:text-base tracking-wider neon-text">CYBER-NODE // UZ-01</span>
+                    <span class="hidden md:inline-block ml-2.5 text-[11px] opacity-75 font-mono">[LATIN_MATRIX_3D: ACTIVE]</span>
+                </div>
+            </div>
+
+            <div class="hidden xl:flex items-center gap-2 px-3 py-1 rounded-lg bg-black/60 border c-border text-[11px] font-mono w-80 overflow-hidden">
+                <i data-lucide="activity" class="w-3.5 h-3.5 shrink-0"></i>
+                <span id="packetStream" class="truncate opacity-85">0x4F 0x9A 0x1C 0xE2 [LOCAL_AI: READY]</span>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <!-- Theme Switcher -->
+                <div class="flex items-center gap-1.5 bg-black/70 px-2 py-1 rounded-lg border c-border" title="Rang mavzusini tanlash">
+                    <button type="button" onclick="setTheme('green')" class="w-3.5 h-3.5 rounded-full bg-[#00ff41] hover:scale-125 transition cursor-pointer" aria-label="Classic Matrix Green"></button>
+                    <button type="button" onclick="setTheme('cyan')" class="w-3.5 h-3.5 rounded-full bg-[#00f3ff] hover:scale-125 transition cursor-pointer" aria-label="Cyber Cyan"></button>
+                    <button type="button" onclick="setTheme('red')" class="w-3.5 h-3.5 rounded-full bg-[#ff003c] hover:scale-125 transition cursor-pointer" aria-label="Red Team Crimson"></button>
+                    <button type="button" onclick="setTheme('amber')" class="w-3.5 h-3.5 rounded-full bg-[#ffb000] hover:scale-125 transition cursor-pointer" aria-label="Mainframe Amber"></button>
+                </div>
+
+                <!-- Retro Cyber Sound Toggle -->
+                <button type="button" onclick="toggleSound()" class="p-1.5 rounded-lg border c-border hover:c-bg-dim transition cursor-pointer" title="Kiber ovoz effektlari">
+                    <i id="soundIcon" data-lucide="volume-2" class="w-4 h-4"></i>
+                </button>
+
+                <!-- Live Clock -->
+                <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg c-bg-dim border c-border text-xs font-tech">
+                    <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                    <span id="liveClock">00:00:00</span>
+                </div>
+
+                <!-- Quick AI Button -->
+                <button type="button" onclick="openModule('ai')" class="px-3 py-1.5 rounded-lg c-bg-solid text-black font-bold text-xs flex items-center gap-1.5 hover:opacity-90 transition cursor-pointer">
+                    <i data-lucide="bot" class="w-3.5 h-3.5"></i>
+                    <span>KIBER-AI</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 z-20 flex flex-col gap-5">
+
+        <!-- HERO & TELEMETRY ROW -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <section class="lg:col-span-8 hud-panel hud-corners rounded-2xl p-5 sm:p-6 flex flex-col justify-between">
+                <div>
+                    <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs c-bg-dim border c-border font-tech">
+                            <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+                            STUDENT // ARDUINO & WOKWI // WEB & 2D GAMES // CYBERSECURITY
+                        </span>
+                        <span class="text-xs font-mono opacity-75">STATUS: ONLINE</span>
+                    </div>
+
+                    <h1 class="text-2xl sm:text-4xl font-bold font-tech tracking-wide neon-text glitch-title mb-2.5">
+                        KIBER-MUHANDIS & KOD ARXITEKTORI
+                    </h1>
+
+                    <p class="text-xs sm:text-sm opacity-85 leading-relaxed mb-4">
+                        Maktab matematika va ingliz tili fanlarini o'rganayotgan, Wokwi/Arduino sxemalarini simulyatsiya qiladigan, HTML/CSS/JS veb-sahifalar va 2D dinozavr o'yinlari yaratadigan, hamda kiberxavfsizlik va texnologiyalarga qiziquvchi yosh tadqiqotchi.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-3 border-t c-border text-xs font-mono">
+                    <div class="bg-black/50 p-2.5 rounded-xl border c-border">
+                        <div class="opacity-70 text-[10px]">ARDUINO & WOKWI</div>
+                        <div class="font-bold text-base font-tech mt-0.5">8 MODUL</div>
+                    </div>
+                    <div class="bg-black/50 p-2.5 rounded-xl border c-border">
+                        <div class="opacity-70 text-[10px]">WEB & 2D ARCADE</div>
+                        <div class="font-bold text-base font-tech mt-0.5">CANVAS JS</div>
+                    </div>
+                    <div class="bg-black/50 p-2.5 rounded-xl border c-border">
+                        <div class="opacity-70 text-[10px]">SETUP & TECH</div>
+                        <div class="font-bold text-base font-tech mt-0.5">LENOVO/PODS</div>
+                    </div>
+                    <div class="bg-black/50 p-2.5 rounded-xl border c-border">
+                        <div class="opacity-70 text-[10px]">NEURAL ENGINE</div>
+                        <div class="font-bold text-base font-tech mt-0.5">OFFLINE AI</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="lg:col-span-4 hud-panel hud-corners rounded-2xl p-5 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs font-tech font-bold tracking-wider flex items-center gap-1.5">
+                            <i data-lucide="cpu" class="w-4 h-4"></i>
+                            SIGNAL OSCILLOSCOPE
+                        </span>
+                        <span class="text-[10px] px-2 py-0.5 rounded c-bg-dim border c-border font-mono">3D MATRIX</span>
+                    </div>
+                    <div class="w-full h-24 bg-black/75 rounded-xl border c-border overflow-hidden relative my-2">
+                        <canvas id="telemetryCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+                <div class="space-y-1.5 text-xs font-mono">
+                    <div class="flex justify-between bg-black/45 px-3 py-1.5 rounded-lg border c-border">
+                        <span class="opacity-70">QURILMALAR:</span>
+                        <span class="font-bold">Lenovo + AirPods</span>
+                    </div>
+                    <div class="flex justify-between bg-black/45 px-3 py-1.5 rounded-lg border c-border">
+                        <span class="opacity-70">ANIME / MEDIA:</span>
+                        <span class="font-bold">Solo Leveling, Naruto</span>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- REQUIRED INTERACTIVE NAVIGATION TABS -->
+        <nav class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5" aria-label="Bo'limlar">
+            <button type="button" onclick="openModule('profile')" id="nav-profile" class="mod-btn p-3 rounded-xl border c-border hud-panel hover:c-bg-dim text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="user-check" class="w-4 h-4 shrink-0"></i>
+                <span>./profil_va_qiziqishlar</span>
+            </button>
+
+            <button type="button" onclick="openModule('hardware')" id="nav-hardware" class="mod-btn p-3 rounded-xl border c-border c-bg-solid text-black font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="cpu" class="w-4 h-4 shrink-0"></i>
+                <span>./arduino_lab</span>
+            </button>
+
+            <button type="button" onclick="openModule('webgame')" id="nav-webgame" class="mod-btn p-3 rounded-xl border c-border hud-panel hover:c-bg-dim text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="gamepad-2" class="w-4 h-4 shrink-0"></i>
+                <span>./web_va_oyin</span>
+            </button>
+
+            <button type="button" onclick="openModule('security')" id="nav-security" class="mod-btn p-3 rounded-xl border c-border hud-panel hover:c-bg-dim text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="lock" class="w-4 h-4 shrink-0"></i>
+                <span>./kiber_qurollar</span>
+            </button>
+
+            <button type="button" onclick="openModule('ai')" id="nav-ai" class="mod-btn col-span-2 sm:col-span-1 p-3 rounded-xl border c-border hud-panel hover:c-bg-dim text-xs flex items-center justify-center gap-2 transition cursor-pointer">
+                <i data-lucide="bot" class="w-4 h-4 shrink-0"></i>
+                <span>./suniy_intellekt</span>
+            </button>
+        </nav>
+
+        <!-- DYNAMIC MODULE STAGE -->
+        <section id="moduleContainer" class="hud-panel hud-corners rounded-2xl p-5 sm:p-7 min-h-[420px]"></section>
+
+        <!-- QUICK CLI BAR -->
+        <section class="hud-panel rounded-xl p-3">
+            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 text-xs font-mono">
+                <span class="px-2 py-1 rounded c-bg-dim border c-border font-bold shrink-0">root@cyber-uz:~$</span>
+                <input id="quickCliInput" type="text" placeholder="Buyruq: profil, arduino, oyin, shifr, ai, rang cyan, tozalash..." class="w-full bg-black/55 px-3 py-1.5 rounded-lg border c-border outline-none c-text" autocomplete="off">
+                <button type="button" onclick="runQuickCli()" class="px-4 py-1.5 rounded-lg c-bg-solid text-black font-bold text-xs cursor-pointer shrink-0">BAJARISH</button>
+            </div>
+            <div id="quickCliLog" class="hidden mt-2 pt-2 border-t c-border text-xs font-mono space-y-1 max-h-28 overflow-y-auto"></div>
+        </section>
+    </main>
+
+    <!-- FLOATING QUICK AI CHAT WIDGET -->
+    <div class="fixed bottom-4 right-4 z-40 flex flex-col items-end">
+        <div id="floatingAiDrawer" class="hidden mb-2.5 w-[92vw] sm:w-96 hud-panel hud-corners rounded-2xl border-2 c-border-bright shadow-2xl overflow-hidden flex flex-col">
+            <div class="px-3.5 py-2.5 border-b c-border c-bg-dim flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="bot" class="w-4 h-4"></i>
+                    <span class="font-tech font-bold text-xs tracking-wider">KIBER-AI // TEZKOR SAVOL-JAVOB</span>
+                </div>
+                <div class="flex items-center gap-1">
+                    <button type="button" onclick="openModule('ai'); toggleFloatingAi(false);" class="text-[10px] px-2 py-0.5 rounded border c-border hover:c-bg-solid hover:text-black font-bold cursor-pointer">KATTA OYNA</button>
+                    <button type="button" onclick="toggleFloatingAi(false)" class="p-1 rounded hover:c-bg-dim cursor-pointer" aria-label="Yopish">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="floatingAiMessages" class="p-3 h-60 overflow-y-auto space-y-2.5 text-xs font-mono bg-black/75"></div>
+            <div class="p-2 border-t c-border bg-black/85 flex gap-2">
+                <input id="floatingAiInput" type="text" placeholder="Men haqimda savol yozing..." class="flex-grow bg-black/65 border c-border rounded-lg px-2.5 py-1.5 text-xs outline-none c-text font-mono" autocomplete="off">
+                <button type="button" onclick="sendAiMessage('floating')" class="px-3 py-1.5 rounded-lg c-bg-solid text-black font-bold text-xs cursor-pointer">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                </button>
+            </div>
+        </div>
+
+        <button type="button" onclick="toggleFloatingAi()" class="flex items-center gap-2 px-4 py-2.5 rounded-full c-bg-solid text-black font-bold text-xs shadow-[0_0_20px_var(--primary-glow)] hover:scale-105 transition cursor-pointer">
+            <i data-lucide="message-square-code" class="w-4 h-4"></i>
+            <span class="font-tech tracking-wider text-sm">KIBER-AI CHAT</span>
+        </button>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="cyberToast" class="fixed top-16 right-4 z-50 hidden hud-panel border-2 c-border-bright px-4 py-2.5 rounded-xl shadow-xl text-xs font-mono flex items-center gap-2">
+        <i data-lucide="check-circle-2" class="w-4 h-4 shrink-0"></i>
+        <span id="cyberToastMsg">Tayyor</span>
+    </div>
+
+    <footer class="w-full hud-panel border-b-0 border-x-0 py-3.5 px-4 z-20 text-xs opacity-80">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2 text-center">
+            <p>CYBER-OS v5.0 // Shaxsiy Matrix & Kiberxavfsizlik Portfeli</p>
+            <p class="font-tech">LATIN MATRIX RAIN + SYNTH AUDIO + OFFLINE KIBER-AI</p>
+        </div>
+    </footer>
+
+    <script>
+        // =====================================================================
+        // 1. SYNTHESIZED RETRO CYBER SOUND ENGINE (WEB AUDIO API)
+        // =====================================================================
+        let soundEnabled = true;
+        let audioCtx = null;
+
+        function playCyberSound(freq = 580, type = 'square', duration = 0.06, volume = 0.03) {
+            if (!soundEnabled) return;
+            try {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) return;
+                if (!audioCtx) audioCtx = new AudioContextClass();
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume().catch(() => {});
+                }
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                osc.frequency.exponentialRampToValueAtTime(Math.max(80, freq * 0.55), now + duration);
+
+                gain.gain.setValueAtTime(volume, now);
+                gain.gain.exponentialRampToValueAtTime(0.0008, now + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(now);
+                osc.stop(now + duration);
+            } catch (_) {
+                // Ignore audio restrictions in sandboxed environments
+            }
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            if (icon) {
+                icon.setAttribute('data-lucide', soundEnabled ? 'volume-2' : 'volume-x');
+                lucide.createIcons();
+            }
+            if (soundEnabled) playCyberSound(780, 'triangle', 0.08, 0.04);
+            showToast(soundEnabled ? "Kiber ovozlar yoqildi" : "Kiber ovozlar o'chirildi");
+        }
+
+        // =====================================================================
+        // 2. TOAST & THEME SWITCHER
+        // =====================================================================
+        let toastTimeout = null;
+        function showToast(message) {
+            const toast = document.getElementById('cyberToast');
+            const msgEl = document.getElementById('cyberToastMsg');
+            if (!toast || !msgEl) return;
+            msgEl.textContent = message;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2600);
+        }
+
+        let matrixColor = '#00ff41';
+        function setTheme(theme) {
+            document.body.classList.remove('theme-cyan', 'theme-red', 'theme-amber');
+            if (theme === 'cyan') {
+                document.body.classList.add('theme-cyan');
+                matrixColor = '#00f3ff';
+            } else if (theme === 'red') {
+                document.body.classList.add('theme-red');
+                matrixColor = '#ff003c';
+            } else if (theme === 'amber') {
+                document.body.classList.add('theme-amber');
+                matrixColor = '#ffb000';
+            } else {
+                matrixColor = '#00ff41';
+            }
+            playCyberSound(720, 'sine', 0.08, 0.035);
+            showToast(`Mavzu o'zgartirildi: ${theme.toUpperCase()}`);
+        }
+
+        // =====================================================================
+        // 3. INTRO BOOT OVERLAY (SAFE PROGRESS + WORKING SKIP & ESC)
+        // =====================================================================
+        let bootDismissed = false;
+        let bootTimers = [];
+
+        function skipBoot() {
+            if (bootDismissed) return;
+            bootDismissed = true;
+            bootTimers.forEach(t => clearTimeout(t));
+            bootTimers = [];
+
+            const overlay = document.getElementById('bootOverlay');
+            const bar = document.getElementById('bootProgressBar');
+            const pct = document.getElementById('bootPercent');
+            if (bar) bar.style.width = '100%';
+            if (pct) pct.textContent = '100%';
+
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                }, 300);
+            }
+            playCyberSound(840, 'triangle', 0.08, 0.03);
+        }
+
+        function startBootSequence() {
+            const logsEl = document.getElementById('bootLogs');
+            const barEl = document.getElementById('bootProgressBar');
+            const pctEl = document.getElementById('bootPercent');
+
+            const steps = [
+                "[OK] CYBER-OS v5.0 yadrosi yuklandi.",
+                "[OK] 3D-chuqurlikli Lotin Matrix yomg'iri ishga tushdi.",
+                "[OK] Wokwi / Arduino simulyator va 2D o'yin dvigateli tayyor.",
+                "[OK] Shaxsiy KIBER-AI bilim bazasi faollashtirildi."
+            ];
+
+            // Hard safety timeout: never stay on screen longer than 2.4s automatically
+            const safetyTimer = setTimeout(() => {
+                skipBoot();
+            }, 2400);
+            bootTimers.push(safetyTimer);
+
+            steps.forEach((text, idx) => {
+                const timer = setTimeout(() => {
+                    if (bootDismissed) return;
+                    if (logsEl) {
+                        const p = document.createElement('p');
+                        p.textContent = `> ${text}`;
+                        logsEl.appendChild(p);
+                    }
+                    const progress = Math.round(((idx + 1) / steps.length) * 100);
+                    if (barEl) barEl.style.width = `${progress}%`;
+                    if (pctEl) pctEl.textContent = `${progress}%`;
+
+                    if (idx === steps.length - 1) {
+                        const doneTimer = setTimeout(() => skipBoot(), 350);
+                        bootTimers.push(doneTimer);
+                    }
+                }, idx * 320);
+                bootTimers.push(timer);
+            });
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !bootDismissed) {
+                e.preventDefault();
+                skipBoot();
+            }
+        });
+
+        // =====================================================================
+        // 4. 3D-FEELING INTERACTIVE LATIN MATRIX RAIN (A-Z, a-z, 0-9, CODE)
+        // =====================================================================
+        const matrixCanvas = document.getElementById('matrixCanvas');
+        const matrixCtx = matrixCanvas.getContext('2d');
+        const latinCharset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789<>/\\{}[]#$@%&*+-=;:?!~^';
+        const latinChars = latinCharset.split('');
+
+        let mWidth = window.innerWidth;
+        let mHeight = window.innerHeight;
+        let rainColumns = [];
+        const pointerPos = { x: -9999, y: -9999 };
+
+        window.addEventListener('mousemove', (e) => {
+            pointerPos.x = e.clientX;
+            pointerPos.y = e.clientY;
+        });
+
+        window.addEventListener('touchmove', (e) => {
+            if (e.touches && e.touches.length > 0) {
+                pointerPos.x = e.touches[0].clientX;
+                pointerPos.y = e.touches[0].clientY;
+            }
+        }, { passive: true });
+
+        function setupMatrixRain() {
+            mWidth = matrixCanvas.width = Math.max(320, window.innerWidth);
+            mHeight = matrixCanvas.height = Math.max(320, window.innerHeight);
+            rainColumns = [];
+
+            // 3 depth layers for a 3D parallax impression
+            const depths = [
+                { size: 11, speedMin: 1.1, speedMax: 2.0, step: 24, baseAlpha: 0.22, density: 1.0 },
+                { size: 15, speedMin: 2.2, speedMax: 3.8, step: 22, baseAlpha: 0.45, density: 0.85 },
+                { size: 19, speedMin: 4.0, speedMax: 6.2, step: 28, baseAlpha: 0.78, density: 0.42 }
+            ];
+
+            depths.forEach((d, depthIdx) => {
+                const count = Math.floor(mWidth / d.step);
+                for (let i = 0; i < count; i++) {
+                    if (Math.random() > d.density) continue;
+                    const trailLen = 8 + Math.floor(Math.random() * 14);
+                    rainColumns.push({
+                        x: i * d.step + Math.random() * 8,
+                        y: Math.random() * -mHeight,
+                        speed: d.speedMin + Math.random() * (d.speedMax - d.speedMin),
+                        size: d.size,
+                        baseAlpha: d.baseAlpha,
+                        depthIdx,
+                        trailLen,
+                        glyphs: Array.from({ length: trailLen }, () => latinChars[Math.floor(Math.random() * latinChars.length)]),
+                        tick: 0
+                    });
+                }
+            });
+        }
+
+        window.addEventListener('resize', setupMatrixRain);
+        setupMatrixRain();
+
+        function renderMatrixRain() {
+            matrixCtx.fillStyle = 'rgba(2, 5, 3, 0.24)';
+            matrixCtx.fillRect(0, 0, mWidth, mHeight);
+
+            for (let i = 0; i < rainColumns.length; i++) {
+                const col = rainColumns[i];
+                col.tick++;
+                if (col.tick % 5 === 0) {
+                    const randSlot = Math.floor(Math.random() * col.glyphs.length);
+                    col.glyphs[randSlot] = latinChars[Math.floor(Math.random() * latinChars.length)];
+                }
+
+                matrixCtx.font = `600 ${col.size}px 'Fira Code', monospace`;
+
+                for (let j = 0; j < col.trailLen; j++) {
+                    const gy = col.y - j * (col.size + 2);
+                    if (gy < -24 || gy > mHeight + 24) continue;
+
+                    const dx = col.x - pointerPos.x;
+                    const dy = gy - pointerPos.y;
+                    const dist = Math.hypot(dx, dy);
+                    const radius = 125;
+
+                    let gx = col.x;
+                    let alpha = col.baseAlpha * (1 - j / col.trailLen);
+
+                    if (dist < radius) {
+                        const influence = 1 - dist / radius;
+                        gx += (dx / (dist || 1)) * influence * 12;
+                        alpha = Math.min(1, alpha + influence * 0.7);
+                        matrixCtx.fillStyle = j === 0 ? '#ffffff' : '#d1fae5';
+                    } else if (j === 0) {
+                        matrixCtx.fillStyle = '#ecfdf5';
+                    } else {
+                        matrixCtx.fillStyle = matrixColor;
+                    }
+
+                    matrixCtx.globalAlpha = Math.max(0.03, alpha);
+                    matrixCtx.fillText(col.glyphs[j], gx, gy);
+                }
+
+                matrixCtx.globalAlpha = 1;
+                col.y += col.speed;
+
+                if (col.y - col.trailLen * (col.size + 2) > mHeight) {
+                    col.y = Math.random() * -140;
+                }
+            }
+
+            requestAnimationFrame(renderMatrixRain);
+        }
+        requestAnimationFrame(renderMatrixRain);
+
+        // =====================================================================
+        // 5. LIVE CLOCK, PACKET STREAM & OSCILLOSCOPE WAVE
+        // =====================================================================
+        function updateClock() {
+            const el = document.getElementById('liveClock');
+            if (el) el.textContent = new Date().toLocaleTimeString('uz-UZ', { hour12: false });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        const packets = [
+            "0x4F 0x9A 0x1C 0xE2 [LATIN_MATRIX_3D]",
+            "0x7B 0x3E 0x88 0x11 [WOKWI_ARDUINO_OK]",
+            "0xA2 0x5D 0x09 0xF4 [KIBER_AI_READY]",
+            "0xC1 0x22 0x7A 0x60 [STEALTH_UNICODE]"
+        ];
+        let packetIndex = 0;
+        setInterval(() => {
+            packetIndex = (packetIndex + 1) % packets.length;
+            const el = document.getElementById('packetStream');
+            if (el) el.textContent = packets[packetIndex];
+        }, 2200);
+
+        const telCanvas = document.getElementById('telemetryCanvas');
+        const telCtx = telCanvas.getContext('2d');
+        let waveTime = 0;
+
+        function drawOscilloscope() {
+            if (telCanvas && telCanvas.offsetWidth > 0 && telCanvas.offsetHeight > 0) {
+                telCanvas.width = telCanvas.offsetWidth;
+                telCanvas.height = telCanvas.offsetHeight;
+                const w = telCanvas.width;
+                const h = telCanvas.height;
+
+                telCtx.clearRect(0, 0, w, h);
+                telCtx.strokeStyle = 'rgba(255,255,255,0.07)';
+                telCtx.lineWidth = 1;
+                for (let x = 0; x < w; x += 24) {
+                    telCtx.beginPath();
+                    telCtx.moveTo(x, 0);
+                    telCtx.lineTo(x, h);
+                    telCtx.stroke();
+                }
+
+                telCtx.beginPath();
+                telCtx.strokeStyle = matrixColor;
+                telCtx.lineWidth = 2;
+                for (let x = 0; x < w; x++) {
+                    const y = h / 2 + Math.sin(x * 0.045 + waveTime) * 16 + Math.cos(x * 0.09 - waveTime) * 6;
+                    if (x === 0) telCtx.moveTo(x, y);
+                    else telCtx.lineTo(x, y);
+                }
+                telCtx.stroke();
+                waveTime += 0.08;
+            }
+            requestAnimationFrame(drawOscilloscope);
+        }
+        requestAnimationFrame(drawOscilloscope);
+
+        // =====================================================================
+        // 6. PERSONAL PROFILE & INTERESTS KNOWLEDGE BASE (FOR SITE + KIBER-AI)
+        // =====================================================================
+        const USER_KNOWLEDGE = {
+            overview: "Siz — o'quvchi/talaba va yosh kiber-muhandis bo'lib, maktab matematika hamda ingliz tilini o'rganasiz, Wokwi/Arduino sxemalarini simulyatsiya qilasiz, HTML/CSS/JS veb-sahifalar va 2D dinozavr o'yini yaratasiz, Gamma AI taqdimotlari bilan ishlaysiz, hamda anime, hujjatli filmlar va musiqaga qiziqasiz.",
+            school: "Maktab fanlaridan Matematika (kasrlar ustida amallar, algebraik ko'phadlarni soddalashtirish, natural bo'luvchilar) va Ingliz tili (yangi so'zlar, Past Simple va Past Continuous zamonlari, rasm tasvirlash va speaking mashqlari) bilan shug'ullanasiz. Shuningdek, kiruvchi o'quvchilar uchun Gamma AI yordamida taqdimot g'oyalari ustida ishlagansiz.",
+            webAndGames: "Veb va o'yin loyihalaringiz orasida 'Ixlos School' uchun sodda landing sahifa konsepsiyasi hamda HTML, CSS va JavaScript yordamida yaratilgan 2D dinozavr (runner) arkada o'yini bor.",
+            hardware: "Wokwi va Arduino muhitida 4x4 matritsali klaviatura, I2C 16x2 LCD ekran, servo motorlar, LEDlar, buzzerlar, MAX7219 LED dot-matrix displey (LedControl.h), PIR harakat datchiklari va IR masofadan boshqarish qabul qilgichlari bilan simulyatsiyalar qilgansiz.",
+            tech: "Kundalik ish va dasturlashda Lenovo noutbuki va Apple AirPods ishlatasiz. Smartfonlardan Samsung Galaxy S21+ va Apple iPhone 13 modellarini solishtirgan holda tahlil qilasiz hamda Telegram foydalanuvchi nomlarini ko'rinmas (blank) Unicode belgilar bilan bezash usullarini bilasiz.",
+            mediaAndMusic: "Sevimli animelaringiz: Naruto, One Piece, Black Clover, Solo Leveling va Parasyte. Filmlar va seriallardan Young Sheldon, The Ron Clark Story va The Boss Baby yoqadi. Hujjatli filmlardan 'WILD AMAZON – Nature's Most Dangerous Paradise'ni, musiqalardan esa Michael Jacksonning 'Earth Song' va Mac Millerning 'Self Care' treklarini tinglaysiz."
+        };
+
+        // =====================================================================
+        // 7. MODULE RENDERER (5 REQUIRED SECTIONS)
+        // =====================================================================
+        let runnerAnimId = null;
+
+        function openModule(moduleKey) {
+            playCyberSound(620, 'sine', 0.05, 0.03);
+            if (runnerAnimId) {
+                cancelAnimationFrame(runnerAnimId);
+                runnerAnimId = null;
+            }
+
+            document.querySelectorAll('.mod-btn').forEach(btn => {
+                btn.classList.remove('c-bg-solid', 'text-black', 'font-bold');
+                btn.classList.add('hud-panel', 'c-text');
+            });
+
+            const activeNav = document.getElementById(`nav-${moduleKey}`);
+            if (activeNav) {
+                activeNav.classList.remove('hud-panel', 'c-text');
+                activeNav.classList.add('c-bg-solid', 'text-black', 'font-bold');
+            }
+
+            const container = document.getElementById('moduleContainer');
+            if (!container) return;
+
+            if (moduleKey === 'profile') {
+                renderProfileModule(container);
+            } else if (moduleKey === 'hardware') {
+                renderHardwareModule(container);
+            } else if (moduleKey === 'webgame') {
+                renderWebGameModule(container);
+            } else if (moduleKey === 'security') {
+                renderSecurityModule(container);
+            } else if (moduleKey === 'ai') {
+                renderAiModule(container);
+            }
+
+            lucide.createIcons();
+        }
+
+        function renderProfileModule(container) {
+            container.innerHTML = `
+                <div class="mb-5 pb-3 border-b c-border flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-mono opacity-65">$ cat /home/user/profile_and_interests.json</span>
+                        <h2 class="text-xl sm:text-2xl font-bold font-tech neon-text">PROFIL, FANLAR, TEXNIKA VA QIZIQISHLAR</h2>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full c-bg-dim border c-border font-mono">DOSSIER v5.0</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-xs font-mono">
+                    <div class="bg-black/50 border c-border rounded-xl p-4">
+                        <h3 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="graduation-cap" class="w-4 h-4"></i>O'qish va Fanlar</h3>
+                        <p class="opacity-85 leading-relaxed mb-2"><b>Matematika:</b> Kasrlar ustida amallar, algebraik ko'phadlarni soddalashtirish, natural bo'luvchilar.</p>
+                        <p class="opacity-85 leading-relaxed mb-2"><b>Ingliz tili:</b> Yangi so'zlar, Past Simple & Past Continuous, rasm tasvirlash, speaking.</p>
+                        <p class="opacity-85 leading-relaxed"><b>AI taqdimot:</b> Yangi o'quvchilar uchun Gamma AI taqdimot g'oyalari.</p>
+                    </div>
+
+                    <div class="bg-black/50 border c-border rounded-xl p-4">
+                        <h3 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="laptop" class="w-4 h-4"></i>Texnika va Setup</h3>
+                        <p class="opacity-85 leading-relaxed mb-2"><b>Qurilmalar:</b> Lenovo noutbuki va Apple AirPods.</p>
+                        <p class="opacity-85 leading-relaxed mb-2"><b>Smartfon tahlili:</b> Samsung Galaxy S21+ va Apple iPhone 13 solishtiruvi.</p>
+                        <p class="opacity-85 leading-relaxed"><b>Telegram estetika:</b> Ko'rinmas (blank) Unicode belgilar bilan foydalanuvchi nomi sozlash.</p>
+                    </div>
+
+                    <div class="bg-black/50 border c-border rounded-xl p-4">
+                        <h3 class="font-bold text-sm mb-2 flex items-center gap-2"><i data-lucide="tv" class="w-4 h-4"></i>Anime, Film va Musiqa</h3>
+                        <p class="opacity-85 leading-relaxed mb-2"><b>Anime:</b> Naruto, One Piece, Black Clover, Solo Leveling, Parasyte.</p>
+                        <p class="opacity-85 leading-relaxed mb-2"><b>Film / Serial & Doc:</b> Young Sheldon, The Ron Clark Story, The Boss Baby; "WILD AMAZON – Nature's Most Dangerous Paradise".</p>
+                        <p class="opacity-85 leading-relaxed"><b>Musiqa:</b> Michael Jackson — "Earth Song", Mac Miller — "Self Care".</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- ./arduino_lab ---
+        let keypadBuffer = '';
+        function renderHardwareModule(container) {
+            keypadBuffer = '';
+            const keys = ['1','2','3','A','4','5','6','B','7','8','9','C','*','0','#','D'];
+            container.innerHTML = `
+                <div class="mb-5 pb-3 border-b c-border flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-mono opacity-65">$ wokwi-sim --mcu arduino-uno --i2c-lcd --keypad-4x4</span>
+                        <h2 class="text-xl sm:text-2xl font-bold font-tech neon-text">ARDUINO & WOKWI APPARAT LABORATORIYASI</h2>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full c-bg-dim border c-border font-mono">16x2 LCD + 4x4 KEYPAD</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                    <div class="lg:col-span-5 bg-black/65 border c-border rounded-2xl p-4 flex flex-col justify-between">
+                        <div>
+                            <div class="text-xs font-tech font-bold mb-2">VIRTUAL I2C 16x2 LCD EKRAN</div>
+                            <div class="bg-[#07220b] border-4 border-zinc-800 rounded-xl p-3.5 mb-4 font-mono">
+                                <div id="lcdTop" class="text-sm font-bold tracking-wider">WOKWI PIN LOCK v1</div>
+                                <div id="lcdBottom" class="text-sm tracking-widest mt-1">CODE: [ _ _ _ _ ]</div>
+                            </div>
+
+                            <div class="text-xs font-tech font-bold mb-2">4x4 MATRITSALI KLAVIATURA</div>
+                            <div class="grid grid-cols-4 gap-2 text-xs font-bold font-mono">
+                                ${keys.map(k => `
+                                    <button type="button" onclick="handleKeypadPress('${k}')" class="py-2.5 rounded-lg bg-black/80 border c-border hover:c-bg-solid hover:text-black transition cursor-pointer">${k}</button>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <p class="text-[11px] opacity-75 mt-3 font-mono">
+                            4 ta belgi kiriting va <b>#</b> bosing. Tozalash uchun <b>*</b> bosing.
+                        </p>
+                    </div>
+
+                    <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-mono">
+                        <div class="bg-black/50 border c-border rounded-xl p-4">
+                            <div class="font-bold text-sm mb-1 flex items-center gap-2"><i data-lucide="grid" class="w-4 h-4"></i>MAX7219 Dot Matrix</div>
+                            <p class="opacity-80 leading-relaxed"><code>LedControl.h</code> kutubxonasi yordamida LED matritsalarda belgilar, belgilar oqimi va naqshlar chiqarish.</p>
+                        </div>
+                        <div class="bg-black/50 border c-border rounded-xl p-4">
+                            <div class="font-bold text-sm mb-1 flex items-center gap-2"><i data-lucide="sliders" class="w-4 h-4"></i>Servo Motorlar</div>
+                            <p class="opacity-80 leading-relaxed">Burchakni aniq boshqarish (0°–180°), qulf mexanizmlari va harakatlanuvchi konstruksiyalar simulyatsiyasi.</p>
+                        </div>
+                        <div class="bg-black/50 border c-border rounded-xl p-4">
+                            <div class="font-bold text-sm mb-1 flex items-center gap-2"><i data-lucide="bell-ring" class="w-4 h-4"></i>LED & Buzzer Signallar</div>
+                            <p class="opacity-80 leading-relaxed">Holat indikatorlari, ogohlantirish signallari va ohang chastotalarini boshqarish sxemalari.</p>
+                        </div>
+                        <div class="bg-black/50 border c-border rounded-xl p-4">
+                            <div class="font-bold text-sm mb-1 flex items-center gap-2"><i data-lucide="radio" class="w-4 h-4"></i>PIR Sensor & IR Receiver</div>
+                            <p class="opacity-80 leading-relaxed">PIR harakat datchigi orqali harakatni sezish va IR infraqizil pult signallarini qabul qilish.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleKeypadPress(key) {
+            playCyberSound(key === '#' ? 900 : key === '*' ? 300 : 620, 'square', 0.05, 0.03);
+            const topEl = document.getElementById('lcdTop');
+            const botEl = document.getElementById('lcdBottom');
+            if (!topEl || !botEl) return;
+
+            if (key === '*') {
+                keypadBuffer = '';
+                topEl.textContent = 'WOKWI PIN LOCK v1';
+                botEl.textContent = 'CODE: [ _ _ _ _ ]';
+                return;
+            }
+
+            if (key === '#') {
+                if (keypadBuffer.length === 4) {
+                    topEl.textContent = 'ACCESS GRANTED!';
+                    botEl.textContent = `PIN [${keypadBuffer}] OK`;
+                    showToast(`Kod qabul qilindi: ${keypadBuffer}`);
+                } else {
+                    topEl.textContent = 'NEED 4 CHARS';
+                    botEl.textContent = 'TRY AGAIN (*)   ';
+                }
+                keypadBuffer = '';
+                return;
+            }
+
+            if (keypadBuffer.length < 4) {
+                keypadBuffer += key;
+                const slots = keypadBuffer.padEnd(4, '_').split('').join(' ');
+                topEl.textContent = 'ENTERING CODE...';
+                botEl.textContent = `CODE: [ ${slots} ]`;
+            }
+        }
+
+        // --- ./web_va_oyin ---
+        let runnerState = {
+            y: 120,
+            vy: 0,
+            grounded: true,
+            obstacles: [],
+            score: 0,
+            best: 0,
+            dead: false,
+            frame: 0
+        };
+
+        function triggerRunnerJump() {
+            if (!document.getElementById('runnerCanvas')) return;
+            if (runnerState.dead) {
+                runnerState.obstacles = [];
+                runnerState.score = 0;
+                runnerState.dead = false;
+                runnerState.y = 120;
+                runnerState.vy = 0;
+                runnerState.frame = 0;
+                playCyberSound(740, 'sine', 0.07, 0.035);
+                return;
+            }
+            if (runnerState.grounded) {
+                runnerState.vy = -10.5;
+                runnerState.grounded = false;
+                playCyberSound(560, 'triangle', 0.07, 0.035);
+            }
+        }
+
+        function renderWebGameModule(container) {
+            container.innerHTML = `
+                <div class="mb-5 pb-3 border-b c-border flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-mono opacity-65">$ ./arcade_runner --mode 2d-dino</span>
+                        <h2 class="text-xl sm:text-2xl font-bold font-tech neon-text">VEB LOYIHALAR & 2D DINOZAVR RUNNER O'YINI</h2>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full c-bg-dim border c-border font-mono">HTML / CSS / JS</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                    <div class="lg:col-span-7 bg-black/70 border c-border rounded-2xl p-4 flex flex-col justify-between">
+                        <div class="flex items-center justify-between mb-2 text-xs font-mono">
+                            <span class="font-bold font-tech">2D CYBER DINO RUNNER</span>
+                            <div>BALL: <span id="runnerScore" class="font-bold">0</span> | REKORD: <span id="runnerBest" class="font-bold">0</span></div>
+                        </div>
+
+                        <div class="w-full h-44 bg-black rounded-xl border c-border overflow-hidden">
+                            <canvas id="runnerCanvas" class="w-full h-full block cursor-pointer"></canvas>
+                        </div>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2 mt-3">
+                            <span class="text-[11px] opacity-75 font-mono"><b>Space / ↑</b> yoki Canvas'ga bosing</span>
+                            <button type="button" onclick="triggerRunnerJump()" class="px-4 py-1.5 rounded-lg c-bg-solid text-black font-bold text-xs cursor-pointer">SAKRASH [JUMP]</button>
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-5 space-y-3.5 text-xs font-mono">
+                        <div class="bg-black/50 border c-border rounded-xl p-4">
+                            <h3 class="font-bold text-sm mb-1">"Ixlos School" Landing Konsepsiyasi</h3>
+                            <p class="opacity-80 leading-relaxed">Maktab/o'quv markazi uchun aniq tuzilmali, mobil va desktop ekranlarga mos HTML/CSS/JS asosidagi bosh sahifa konsepsiyasi.</p>
+                        </div>
+                        <div class="bg-black/50 border c-border rounded-xl p-4">
+                            <h3 class="font-bold text-sm mb-1">2D Dinozavr Arkada Mexanikasi</h3>
+                            <p class="opacity-80 leading-relaxed">Sakrab to'siqlardan o'tish, tezlik oshishi va to'qnashuvni tekshirish mantig'i toza JavaScript Canvas siklida ishlaydi.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            startRunnerLoop();
+        }
+
+        function startRunnerLoop() {
+            const canvas = document.getElementById('runnerCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            runnerState = {
+                y: 120,
+                vy: 0,
+                grounded: true,
+                obstacles: [],
+                score: 0,
+                best: runnerState.best || 0,
+                dead: false,
+                frame: 0
+            };
+
+            canvas.addEventListener('pointerdown', triggerRunnerJump);
+
+            function step() {
+                const activeCanvas = document.getElementById('runnerCanvas');
+                if (!activeCanvas) return;
+
+                activeCanvas.width = activeCanvas.offsetWidth || 600;
+                activeCanvas.height = activeCanvas.offsetHeight || 176;
+                const w = activeCanvas.width;
+                const h = activeCanvas.height;
+                const groundY = h - 24;
+                const playerX = 36;
+                const playerW = 22;
+                const playerH = 26;
+
+                ctx.clearRect(0, 0, w, h);
+                ctx.strokeStyle = matrixColor;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, groundY);
+                ctx.lineTo(w, groundY);
+                ctx.stroke();
+
+                if (!runnerState.dead) {
+                    runnerState.frame++;
+                    runnerState.score++;
+                    const displayScore = Math.floor(runnerState.score / 5);
+                    if (displayScore > runnerState.best) runnerState.best = displayScore;
+
+                    const sEl = document.getElementById('runnerScore');
+                    const bEl = document.getElementById('runnerBest');
+                    if (sEl) sEl.textContent = String(displayScore);
+                    if (bEl) bEl.textContent = String(runnerState.best);
+
+                    if (!runnerState.grounded) {
+                        runnerState.y += runnerState.vy;
+                        runnerState.vy += 0.62;
+                        if (runnerState.y + playerH >= groundY) {
+                            runnerState.y = groundY - playerH;
+                            runnerState.vy = 0;
+                            runnerState.grounded = true;
+                        }
+                    } else {
+                        runnerState.y = groundY - playerH;
+                    }
+
+                    if (runnerState.frame % 82 === 0) {
+                        const obH = 20 + Math.floor(Math.random() * 18);
+                        runnerState.obstacles.push({ x: w + 12, y: groundY - obH, w: 15, h: obH });
+                    }
+
+                    const speed = 4.8 + Math.min(4.5, runnerState.score / 700);
+                    for (let i = runnerState.obstacles.length - 1; i >= 0; i--) {
+                        const ob = runnerState.obstacles[i];
+                        ob.x -= speed;
+
+                        if (
+                            playerX < ob.x + ob.w &&
+                            playerX + playerW > ob.x &&
+                            runnerState.y < ob.y + ob.h &&
+                            runnerState.y + playerH > ob.y
+                        ) {
+                            runnerState.dead = true;
+                            playCyberSound(190, 'sawtooth', 0.18, 0.04);
+                        }
+
+                        if (ob.x + ob.w < -10) {
+                            runnerState.obstacles.splice(i, 1);
+                        }
+                    }
+                }
+
+                // Dino / Cyber block
+                ctx.fillStyle = matrixColor;
+                ctx.fillRect(playerX, runnerState.y, playerW, playerH);
+                ctx.fillStyle = '#000000';
+                ctx.fillRect(playerX + 13, runnerState.y + 5, 5, 5);
+
+                // Obstacles
+                runnerState.obstacles.forEach(ob => {
+                    ctx.fillStyle = '#ff003c';
+                    ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
+                });
+
+                if (runnerState.dead) {
+                    ctx.fillStyle = 'rgba(0,0,0,0.72)';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.fillStyle = matrixColor;
+                    ctx.font = "bold 13px 'Fira Code', monospace";
+                    ctx.textAlign = 'center';
+                    ctx.fillText("TO'QNASHUV! QAYTA BOSHLASH UCHUN BOSING", w / 2, h / 2);
+                }
+
+                runnerAnimId = requestAnimationFrame(step);
+            }
+
+            runnerAnimId = requestAnimationFrame(step);
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if ((e.code === 'Space' || e.code === 'ArrowUp') && document.getElementById('runnerCanvas')) {
+                e.preventDefault();
+                triggerRunnerJump();
+            }
+        });
+
+        // --- ./kiber_qurollar ---
+        function renderSecurityModule(container) {
+            container.innerHTML = `
+                <div class="mb-5 pb-3 border-b c-border flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-mono opacity-65">$ ./cyber_tools --codec --password --unicode</span>
+                        <h2 class="text-xl sm:text-2xl font-bold font-tech neon-text">KIBERXAVFSIZLIK QUROLLARI</h2>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full c-bg-dim border c-border font-mono">CODEC & STEALTH</span>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 text-xs font-mono">
+                    <!-- Base64 & Hex Encoder / Decoder -->
+                    <div class="bg-black/50 border c-border rounded-xl p-4 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-sm mb-2">Base64 & Hex Encoder / Decoder</h3>
+                            <textarea id="codecInput" rows="2" placeholder="Matn yoki kod kiriting..." class="w-full bg-black/75 border c-border rounded-lg p-2 outline-none c-text mb-2"></textarea>
+                            <div class="grid grid-cols-2 gap-1.5 mb-2">
+                                <button type="button" onclick="runCodec('b64_enc')" class="py-1.5 rounded c-bg-solid text-black font-bold cursor-pointer">B64 ENC</button>
+                                <button type="button" onclick="runCodec('b64_dec')" class="py-1.5 rounded border c-border hover:c-bg-dim font-bold cursor-pointer">B64 DEC</button>
+                                <button type="button" onclick="runCodec('hex_enc')" class="py-1.5 rounded border c-border hover:c-bg-dim font-bold cursor-pointer">HEX ENC</button>
+                                <button type="button" onclick="runCodec('hex_dec')" class="py-1.5 rounded border c-border hover:c-bg-dim font-bold cursor-pointer">HEX DEC</button>
+                            </div>
+                            <div id="codecOutput" class="bg-black/80 border c-border rounded-lg p-2.5 min-h-[52px] break-all">Natija shu yerda chiqadi.</div>
+                        </div>
+                    </div>
+
+                    <!-- Password Strength Analyzer -->
+                    <div class="bg-black/50 border c-border rounded-xl p-4 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-sm mb-2">Parol Bardoshliligi Tahlili</h3>
+                            <input id="pwdInput" type="text" oninput="checkPassword()" placeholder="Parol yozing..." class="w-full bg-black/75 border c-border rounded-lg p-2.5 outline-none c-text mb-2.5">
+                            <div class="w-full h-2 bg-black rounded-full overflow-hidden border c-border mb-2">
+                                <div id="pwdBar" class="h-full c-bg-solid transition-all duration-200" style="width: 0%"></div>
+                            </div>
+                            <div id="pwdStatus" class="opacity-85 space-y-1">
+                                <p>Daraja: Kiritilmagan</p>
+                                <p>Uzunlik: 0 belgi</p>
+                            </div>
+                        </div>
+                        <button type="button" onclick="makeSamplePassword()" class="mt-3 w-full py-1.5 rounded c-bg-solid text-black font-bold cursor-pointer">KUCHLI NAMUNA YARATISH</button>
+                    </div>
+
+                    <!-- Invisible Unicode for Telegram -->
+                    <div class="bg-black/50 border c-border rounded-xl p-4 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-sm mb-2">Telegram Ko'rinmas Unicode</h3>
+                            <p class="opacity-80 leading-relaxed mb-2">
+                                Telegram foydalanuvchi nomi (username/name) yoki bo'sh satrlar uchun ko'rinmas Unicode belgilar (<code>U+2800</code> / <code>U+3164</code>).
+                            </p>
+                            <div class="bg-black/80 border c-border rounded-lg p-2.5 text-center opacity-75">
+                                [ BLANK UNICODE PAYLOAD READY ]
+                            </div>
+                        </div>
+                        <button type="button" onclick="copyBlankUnicode()" class="mt-3 w-full py-2 rounded c-bg-solid text-black font-bold cursor-pointer">KO'RINMAS BELGINI NUSXALASH</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function runCodec(mode) {
+            const inp = document.getElementById('codecInput');
+            const out = document.getElementById('codecOutput');
+            if (!inp || !out) return;
+            const raw = inp.value.trim();
+            if (!raw) {
+                out.textContent = "Avval matn kiriting.";
+                return;
+            }
+            playCyberSound(740, 'sine', 0.05, 0.03);
+            try {
+                if (mode === 'b64_enc') {
+                    out.textContent = btoa(unescape(encodeURIComponent(raw)));
+                } else if (mode === 'b64_dec') {
+                    out.textContent = decodeURIComponent(escape(atob(raw)));
+                } else if (mode === 'hex_enc') {
+                    out.textContent = Array.from(raw).map(ch => ch.charCodeAt(0).toString(16).padStart(2, '0')).join(' ').toUpperCase();
+                } else if (mode === 'hex_dec') {
+                    const cleanHex = raw.replace(/[^0-9a-fA-F]/g, '');
+                    if (cleanHex.length < 2 || cleanHex.length % 2 !== 0) {
+                        out.textContent = "Noto'g'ri HEX format.";
+                        return;
+                    }
+                    let decoded = '';
+                    for (let i = 0; i < cleanHex.length; i += 2) {
+                        decoded += String.fromCharCode(parseInt(cleanHex.slice(i, i + 2), 16));
+                    }
+                    out.textContent = decoded;
+                }
+            } catch (_) {
+                out.textContent = "Dekodlashda xatolik: kiritilgan qiymatni tekshiring.";
+            }
+        }
+
+        function checkPassword() {
+            const inp = document.getElementById('pwdInput');
+            const bar = document.getElementById('pwdBar');
+            const st = document.getElementById('pwdStatus');
+            if (!inp || !bar || !st) return;
+            const v = inp.value;
+            let score = 0;
+            if (v.length >= 6) score += 20;
+            if (v.length >= 10) score += 25;
+            if (/[A-Z]/.test(v)) score += 15;
+            if (/[a-z]/.test(v)) score += 15;
+            if (/[0-9]/.test(v)) score += 15;
+            if (/[^A-Za-z0-9]/.test(v)) score += 10;
+
+            bar.style.width = `${Math.min(100, score)}%`;
+            const label = score < 40 ? 'ZAIF' : score < 75 ? "O'RTACHA" : 'KUCHLI';
+            st.innerHTML = `<p>Daraja: <b>${label}</b> (${Math.min(100, score)}%)</p><p>Uzunlik: ${v.length} belgi</p>`;
+        }
+
+        function makeSamplePassword() {
+            const pool = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789@#%_+-';
+            let res = '';
+            for (let i = 0; i < 14; i++) {
+                res += pool[Math.floor(Math.random() * pool.length)];
+            }
+            const inp = document.getElementById('pwdInput');
+            if (inp) {
+                inp.value = res;
+                checkPassword();
+            }
+            playCyberSound(840, 'triangle', 0.06, 0.03);
+        }
+
+        function copyBlankUnicode() {
+            const blank = '\u2800\u3164';
+            const ta = document.createElement('textarea');
+            ta.value = blank;
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+            } catch (_) {}
+            document.body.removeChild(ta);
+            playCyberSound(880, 'sine', 0.06, 0.035);
+            showToast("Ko'rinmas Unicode belgi nusxalandi!");
+        }
+
+        // =====================================================================
+        // 8. BUILT-IN LOCAL AI ASSISTANT (KIBER-AI // ZERO EXTERNAL API NEEDED)
+        // =====================================================================
+        const chatLog = [
+            {
+                from: 'ai',
+                text: "Salom! Men **KIBER-AI**. Profil, maktab fanlari, Wokwi/Arduino sxemalari, 'Ixlos School' va 2D o'yin, Lenovo/AirPods yoki iPhone 13 vs Galaxy S21+, anime va musiqalaringiz haqidagi savollarga darhol javob beraman."
+            }
+        ];
+
+        function generateLocalAiReply(rawQuestion) {
+            const q = rawQuestion.toLowerCase();
+
+            const hasAny = (words) => words.some(w => q.includes(w));
+
+            if (hasAny(['anime', 'naruto', 'one piece', 'black clover', 'solo leveling', 'parasyte'])) {
+                return `Sevimli animelaringiz: **Naruto**, **One Piece**, **Black Clover**, **Solo Leveling** va **Parasyte**. ${USER_KNOWLEDGE.mediaAndMusic}`;
+            }
+
+            if (hasAny(['film', 'kino', 'serial', 'young sheldon', 'ron clark', 'boss baby', 'amazon', 'hujjatli'])) {
+                return `Ko'radigan film, serial va hujjatli ishlaringiz: **Young Sheldon**, **The Ron Clark Story**, **The Boss Baby** hamda **'WILD AMAZON – Nature's Most Dangerous Paradise'** hujjatli filmi.`;
+            }
+
+            if (hasAny(['musiqa', 'qoshiq', "qo'shiq", 'trek', 'earth song', 'michael jackson', 'mac miller', 'self care'])) {
+                return `Tinglaydigan musiqalaringiz orasida **Michael Jackson**ning **"Earth Song"** va **Mac Miller**ning **"Self Care"** treklari bor.`;
+            }
+
+            if (hasAny(['arduino', 'wokwi', 'lcd', 'keypad', 'servo', 'max7219', 'pir', 'ir', 'buzzer', 'led', 'sxema'])) {
+                return USER_KNOWLEDGE.hardware;
+            }
+
+            if (hasAny(['web', 'veb', 'sayt', 'ixlos', 'oyin', "o'yin", 'dino', 'runner', 'html', 'css', 'js', 'javascript'])) {
+                return USER_KNOWLEDGE.webAndGames;
+            }
+
+            if (hasAny(['matematika', 'algebra', 'kasr', 'boluvchi', "bo'luvchi", 'ingliz', 'past simple', 'past continuous', 'speaking', 'gamma', 'taqdimot', 'oqish', "o'qish", 'maktab', 'fan'])) {
+                return USER_KNOWLEDGE.school;
+            }
+
+            if (hasAny(['noutbuk', 'lenovo', 'airpods', 'telefon', 'smartfon', 's21', 'galaxy', 'iphone', 'telegram', 'unicode', 'korinmas', "ko'rinmas", 'qurilma', 'setup'])) {
+                return USER_KNOWLEDGE.tech;
+            }
+
+            if (hasAny(['kim', 'profil', 'haqingda', 'qiziqish', 'nimalar', 'umumiy', 'tanishtir'])) {
+                return `${USER_KNOWLEDGE.overview} ${USER_KNOWLEDGE.school} ${USER_KNOWLEDGE.hardware}`;
+            }
+
+            // Smart fallback synthesis combining relevant profile pillars
+            return `Savolingiz bo'yicha qisqa ma'lumot: ${USER_KNOWLEDGE.overview} Batafsilroq **arduino**, **matematika/ingliz tili**, **web/o'yin**, **texnika (lenovo/iphone/s21)** yoki **anime/musiqa** haqida so'rashingiz mumkin.`;
+        }
+
+        function formatAiText(str) {
+            const escaped = escapeHtml(str);
+            return escaped
+                .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function renderAiChats() {
+            const targets = [
+                document.getElementById('aiChatBox'),
+                document.getElementById('floatingAiMessages')
+            ].filter(Boolean);
+
+            targets.forEach(box => {
+                box.innerHTML = chatLog.map(item => {
+                    if (item.from === 'user') {
+                        return `
+                            <div class="flex justify-end">
+                                <div class="max-w-[85%] rounded-2xl rounded-tr-none px-3 py-2 c-bg-dim border c-border-bright">
+                                    <div class="text-[10px] opacity-65 mb-0.5">SIZ</div>
+                                    <div>${escapeHtml(item.text)}</div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    return `
+                        <div class="flex justify-start">
+                            <div class="max-w-[90%] rounded-2xl rounded-tl-none px-3 py-2 bg-black/85 border c-border">
+                                <div class="text-[10px] opacity-75 mb-0.5 font-tech">KIBER-AI</div>
+                                <div class="leading-relaxed">${formatAiText(item.text)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        function sendAiMessage(origin) {
+            const inputEl = document.getElementById(origin === 'floating' ? 'floatingAiInput' : 'mainAiInput');
+            if (!inputEl) return;
+            const text = inputEl.value.trim();
+            if (!text) return;
+
+            inputEl.value = '';
+            chatLog.push({ from: 'user', text });
+            playCyberSound(680, 'sine', 0.05, 0.03);
+            renderAiChats();
+
+            // Instant reliable local neural response (zero network dependency)
+            setTimeout(() => {
+                const reply = generateLocalAiReply(text);
+                chatLog.push({ from: 'ai', text: reply });
+                playCyberSound(820, 'triangle', 0.06, 0.03);
+                renderAiChats();
+            }, 140);
+        }
+
+        function quickAsk(promptText) {
+            chatLog.push({ from: 'user', text: promptText });
+            playCyberSound(680, 'sine', 0.05, 0.03);
+            renderAiChats();
+            setTimeout(() => {
+                const reply = generateLocalAiReply(promptText);
+                chatLog.push({ from: 'ai', text: reply });
+                playCyberSound(820, 'triangle', 0.06, 0.03);
+                renderAiChats();
+            }, 120);
+        }
+
+        function toggleFloatingAi(forceOpen) {
+            const drawer = document.getElementById('floatingAiDrawer');
+            if (!drawer) return;
+            const open = typeof forceOpen === 'boolean' ? forceOpen : drawer.classList.contains('hidden');
+            drawer.classList.toggle('hidden', !open);
+            playCyberSound(open ? 740 : 460, 'sine', 0.05, 0.03);
+            if (open) {
+                renderAiChats();
+                const fInp = document.getElementById('floatingAiInput');
+                if (fInp) fInp.focus();
+            }
+            lucide.createIcons();
+        }
+
+        function renderAiModule(container) {
+            container.innerHTML = `
+                <div class="mb-4 pb-3 border-b c-border flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                        <span class="text-xs font-mono opacity-65">$ ./kiber_ai --mode local-neural --offline-safe</span>
+                        <h2 class="text-xl sm:text-2xl font-bold font-tech neon-text">KIBER-AI // NEURAL ASSISTANT</h2>
+                    </div>
+                    <span class="text-xs px-3 py-1 rounded-full c-bg-dim border c-border font-mono">100% AVTONOM JAVOB</span>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mb-3 text-xs font-mono">
+                    <button type="button" onclick="quickAsk('Men haqimda umumiy malumot ber')" class="px-3 py-1.5 rounded-lg bg-black/60 border c-border hover:c-bg-dim cursor-pointer">Profil haqida</button>
+                    <button type="button" onclick="quickAsk('Maktab matematika va ingliz tili hamda Gamma AI haqida ayt')" class="px-3 py-1.5 rounded-lg bg-black/60 border c-border hover:c-bg-dim cursor-pointer">Fanlar & Gamma AI</button>
+                    <button type="button" onclick="quickAsk('Wokwi va Arduino sxemalarim nimalardan iborat?')" class="px-3 py-1.5 rounded-lg bg-black/60 border c-border hover:c-bg-dim cursor-pointer">Arduino & Wokwi</button>
+                    <button type="button" onclick="quickAsk('Ixlos school va 2D dinozavr oyini haqida')" class="px-3 py-1.5 rounded-lg bg-black/60 border c-border hover:c-bg-dim cursor-pointer">Web & 2D O'yin</button>
+                    <button type="button" onclick="quickAsk('Lenovo, AirPods, iPhone 13 vs Galaxy S21+ va Telegram unicode')" class="px-3 py-1.5 rounded-lg bg-black/60 border c-border hover:c-bg-dim cursor-pointer">Texnika & Setup</button>
+                    <button type="button" onclick="quickAsk('Sevimli anime, film, hujjatli film va musiqalarim')" class="px-3 py-1.5 rounded-lg bg-black/60 border c-border hover:c-bg-dim cursor-pointer">Anime & Musiqa</button>
+                </div>
+
+                <div id="aiChatBox" class="bg-black/75 border c-border rounded-2xl p-4 h-64 overflow-y-auto space-y-2.5 text-xs sm:text-sm font-mono mb-3"></div>
+
+                <div class="flex gap-2">
+                    <input id="mainAiInput" type="text" placeholder="Savolingizni yozing (masalan: Solo Leveling, MAX7219, Earth Song, iPhone 13)..." class="flex-grow bg-black/70 border c-border rounded-xl px-3.5 py-2.5 text-xs sm:text-sm outline-none c-text font-mono" autocomplete="off">
+                    <button type="button" onclick="sendAiMessage('main')" class="px-5 py-2.5 rounded-xl c-bg-solid text-black font-bold text-xs sm:text-sm cursor-pointer">YUBORISH</button>
+                </div>
+            `;
+
+            const mainInp = document.getElementById('mainAiInput');
+            if (mainInp) {
+                mainInp.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendAiMessage('main');
+                });
+                mainInp.focus();
+            }
+            renderAiChats();
+        }
+
+        // =====================================================================
+        // 9. QUICK CLI & HELPERS
+        // =====================================================================
+        const quickCliInput = document.getElementById('quickCliInput');
+        if (quickCliInput) {
+            quickCliInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') runQuickCli();
+            });
+        }
+
+        const floatingAiInput = document.getElementById('floatingAiInput');
+        if (floatingAiInput) {
+            floatingAiInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendAiMessage('floating');
+            });
+        }
+
+        function runQuickCli() {
+            const logEl = document.getElementById('quickCliLog');
+            if (!quickCliInput || !logEl) return;
+            const raw = quickCliInput.value.trim();
+            if (!raw) return;
+
+            const cmd = raw.toLowerCase();
+            logEl.classList.remove('hidden');
+            playCyberSound(640, 'sine', 0.05, 0.03);
+
+            if (cmd === 'tozalash' || cmd === 'clear') {
+                logEl.innerHTML = '';
+                logEl.classList.add('hidden');
+                quickCliInput.value = '';
+                return;
+            }
+
+            let responseText = '';
+            if (cmd.includes('profil')) {
+                openModule('profile');
+                responseText = '-> ./profil_va_qiziqishlar ochildi.';
+            } else if (cmd.includes('arduino') || cmd.includes('wokwi')) {
+                openModule('hardware');
+                responseText = '-> ./arduino_lab ochildi.';
+            } else if (cmd.includes('oyin') || cmd.includes("o'yin") || cmd.includes('web')) {
+                openModule('webgame');
+                responseText = '-> ./web_va_oyin ochildi.';
+            } else if (cmd.includes('shifr') || cmd.includes('kiber') || cmd.includes('qurol')) {
+                openModule('security');
+                responseText = '-> ./kiber_qurollar ochildi.';
+            } else if (cmd === 'ai' || cmd.includes('suniy') || cmd.includes('intellekt')) {
+                openModule('ai');
+                responseText = '-> ./suniy_intellekt ochildi.';
+            } else if (cmd.startsWith('rang')) {
+                if (cmd.includes('cyan')) setTheme('cyan');
+                else if (cmd.includes('red')) setTheme('red');
+                else if (cmd.includes('amber')) setTheme('amber');
+                else setTheme('green');
+                responseText = '-> Rang mavzusi yangilandi.';
+            } else {
+                responseText = 'Buyruqlar: profil, arduino, oyin, shifr, ai, rang green|cyan|red|amber, tozalash';
+            }
+
+            const line = document.createElement('div');
+            line.innerHTML = `<span class="opacity-65">$ ${escapeHtml(raw)}</span><br>${responseText}`;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+            quickCliInput.value = '';
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        // Initialize icons, default module, and boot overlay safely
+        window.addEventListener('DOMContentLoaded', () => {
+            openModule('hardware');
+            renderAiChats();
+            lucide.createIcons();
+            startBootSequence();
+        });
+    </script>
+</body>
+</html>
